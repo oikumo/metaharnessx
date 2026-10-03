@@ -1,0 +1,14 @@
+# MHX.yaml — consumer source of truth (standard YAML, schema-validated).
+# OMT-HDL stays upstream authoring surface, not consumer contract (ADR-002).
+version: 1
+policy_ver: 1
+stack_profile: none
+deny:
+  - "tool=bash pattern=git push|git pull|git fetch"
+  - "tool=read pattern=\\.env(\\..*)?$"
+protect:
+  - "path=.env* hard=true"
+checks_ref: checks.yaml
+budgets:
+  - "id=agents_managed_section cap_bytes=1536 mode=hygiene"
+skills: ["doctor", "status", "check", "resume"]

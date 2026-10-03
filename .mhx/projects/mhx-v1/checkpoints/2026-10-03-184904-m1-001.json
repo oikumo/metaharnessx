@@ -1,0 +1,17 @@
+{
+  "checkpoint_id": "2026-10-03-184904-m1-001.json",
+  "created_at": "2026-10-03T18:49:04Z",
+  "evidence": {
+    "classification": "see verify"
+  },
+  "next_action": "M0-M1 kit landed; 15 tests green; verify pass",
+  "note": "M0-M1 kit landed; 15 tests green; verify pass",
+  "op_id": "op-m0m1-001",
+  "parent_id": "2026-10-03-v7-go.json",
+  "project_id": "mhx-v1",
+  "schema_ver": 1,
+  "workspace": {
+    "revision": "27b4dd534a2d7c79b3d0e28ffc2b39dedb45cc26",
+    "tree": "sha256:a7397542fa0af8504508b958c19c6660151bf30444e46f0dfc09731910c5c52b"
+  }
+}

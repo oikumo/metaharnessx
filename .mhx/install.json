@@ -1,0 +1,1 @@
+{"install_reason": "factory+first-consumer dogfood (Phase 1-micro v7 GO)", "installed_at": "2026-10-03T00:00:00Z", "mhx_version": "0.1.0", "owned_paths": [".agents/skills/mhx-doctor", ".agents/skills/mhx-status", ".agents/skills/mhx-check", ".agents/skills/mhx-resume", "AGENTS.md:MHX:BEGIN/END block only"], "policy_ver": 1, "skill_ver": 1}

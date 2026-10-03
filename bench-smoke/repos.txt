@@ -1,0 +1,10 @@
+# bench-smoke repos (foreign repo FIRST — prevents designing to self)
+
+# Fixture repo: this repo (`metaharnessx` @ pinned rev, 1 stack: python stdlib).
+# Foreign repo: a repo NOT used to design MHX (fill before running M3.1).
+# Example: https://github.com/<org>/<small-python-cli> @ <sha> (1 stack only for smoke).
+foreign-repo: TODO-fill-before-M3.1
+fixture-repo: metaharnessx@HEAD
+stack: python-stdlib-only
+model: pinned-per-run (record in report)
+permissions: pinned-per-run (record in report)

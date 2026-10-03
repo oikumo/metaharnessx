@@ -1,0 +1,30 @@
+name: mhx-check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  mhx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: MHX doctor (probe, non-gating informational except config)
+        run: python3 scripts/mhx.py doctor --json
+      - name: MHX check (runs checks.yaml relevant to diff, writes evidence)
+        run: python3 scripts/mhx.py check --json
+      - name: MHX verify (digest compare; stale/fail blocks)
+        run: python3 scripts/mhx.py verify --json
+      - name: Stdlib-only pin + skill shape + unit tests
+        run: |
+          python3 -m pytest tests/ -q
+      - name: Upload evidence (CI artifact = trust anchor with git object)
+        uses: actions/upload-artifact@v4
+        with:
+          name: mhx-evidence
+          path: .mhx/evidence.json

@@ -1,0 +1,1 @@
+{"checks": [{"cmd": "uv run pytest tests/ -q", "exit": 0, "id": "pytest-feature", "log_digest": "sha256:TAMPERED"}], "diff_digest": "sha256:tampered", "policy_ver": 1}

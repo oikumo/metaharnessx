@@ -1,0 +1,13 @@
+[project]
+name = "metaharnessx"
+version = "0.1.0"
+description = "MHX Phase 1-micro: continuity + evidence kit (opencode, advise-only skills, CI-is-authority)"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mhx]
+policy_ver = 1
+skill_ver = 1

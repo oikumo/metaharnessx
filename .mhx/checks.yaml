@@ -1,0 +1,5 @@
+# checks.yaml — ecosystem commands behind a stable interface.
+# Each entry: id | cmd | applies_to (glob prefix). Runner executes cmd as-is.
+- id: pytest-feature
+  cmd: uv run pytest tests/ -q
+  applies_to: tests/

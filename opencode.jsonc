@@ -74,7 +74,13 @@
       "python3 *": "deny",
       "pip *": "deny",
       "pip3 *": "deny",
-      "pytest *": "deny"
+      "pytest *": "deny",
+      "python3 --version": "allow",
+      "python3 scripts/mhx/*": "allow",
+      "python3 scripts/mhx.py *": "allow",
+      "python3 -m pytest *": "allow",
+      "pytest tests/*": "allow",
+      "uv run pytest *": "allow"
     },
     "grep *": "allow",
     "glob *": "allow",
