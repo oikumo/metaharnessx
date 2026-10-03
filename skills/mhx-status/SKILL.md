@@ -1,12 +1,12 @@
 ---
 name: mhx-status
-description: "Show repo constraints for your pending change and what to run. Use before editing src/, tests/, or Bash that writes files."
+description: "Show repo constraints for your pending change and what to run. Use before editing src/, tests/, work/, or Bash that writes files."
 allowed-tools: "Bash(uv run python scripts/mhx.py *) Read"
 ---
 
 # mhx-status — constraints that apply (advise-only)
 
-You show what applies. You never deny. Verdicts say `would-deny-at-CI`.
+You show what applies. You never deny. Verdicts say `would-deny-at-CI`. MHX is a wrapper harness; `work/` user projects are never gated by harness CI (sole carve-out: version-pinned meta MHX may write under `work/<project>/.mhx/`, tracked by that project).
 
 ## Step 1 — preflight first (always)
 

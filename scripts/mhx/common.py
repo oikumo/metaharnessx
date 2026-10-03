@@ -23,6 +23,16 @@ SKILL_VER = 1
 EVIDENCE_VER = 1
 SCHEMA_VER = 1
 
+# Scope: MHX is a mechanical automatic opencode meta harness (wrapper).
+# Tracked harness lives at workspace root; user projects live in gitignored
+# work/ (see .gitignore work/*). Harness verbs never track, digest, or gate
+# work/ contents — they operate the wrapper only — with one carve-out: MHX
+# may write version-pinned meta under work/<project>/.mhx/ (tracked by the
+# user project itself, cross-referencing this harness + MHX version).
+WORK_DIR = "work"
+WORK_MHX_DIR = ".mhx"
+WORK_REF_FILE = "MHX.ref.json"
+
 # Managed AGENTS.md block markers (byte-preserved outside).
 MANAGED_BEGIN = "<!-- MHX:BEGIN"
 MANAGED_END = "<!-- MHX:END -->"
@@ -87,7 +97,7 @@ def sha256_str(s: str) -> str:
     return "sha256:" + hashlib.sha256(s.encode("utf-8")).hexdigest()
 
 
-IGNORED_IN_DIGEST = (".mhx/evidence.json", ".mhx/cache/", ".mhx/local/", ".venv/")
+IGNORED_IN_DIGEST = (".mhx/evidence.json", ".mhx/cache/", ".mhx/local/", ".venv/", "work/")
 
 
 def _filter_status(porcelain: str) -> str:
@@ -178,6 +188,87 @@ def is_protected(path_str: str) -> bool:
         if re.search(pat, base) or re.search(pat, path_str):
             return True
     return False
+
+
+def is_work_path(path_str: str) -> bool:
+    """True if path lives under gitignored work/ user-project home."""
+    return path_str == WORK_DIR or path_str.startswith(WORK_DIR + "/")
+
+
+def is_work_mhx_meta_path(path_str: str) -> bool:
+    """True iff path is MHX-managed per-project meta: work/<proj>/.mhx/... .
+
+    The sole work/ carve-out MHX may write. <proj> must be a plain directory
+    name (not .gitkeep, not empty, no traversal); anything deeper under
+    .mhx/ counts (MHX.ref.json and future meta files).
+    """
+    parts = path_str.replace("\\", "/").split("/")
+    if len(parts) < 3:
+        return False
+    if parts[0] != WORK_DIR or parts[2] != WORK_MHX_DIR:
+        return False
+    proj = parts[1]
+    if not proj or proj in (".", "..", ".gitkeep", WORK_MHX_DIR):
+        return False
+    if any(p in ("", ".", "..") for p in parts[1:]):
+        return False
+    return True
+
+
+def work_project_mhx_dir(ws: Path, name: str) -> Path:
+    """Per-project meta home: work/<name>/.mhx/ (owned by user project)."""
+    return ws / WORK_DIR / name / WORK_MHX_DIR
+
+
+def read_work_ref(ws: Path, name: str) -> dict | None:
+    """Read work/<name>/.mhx/MHX.ref.json; None if absent/unparseable."""
+    import json as _json
+
+    ref = work_project_mhx_dir(ws, name) / WORK_REF_FILE
+    try:
+        obj = _json.loads(ref.read_text(encoding="utf-8"))
+        return obj if isinstance(obj, dict) else None
+    except Exception:
+        return None
+
+
+def work_meta_inventory(ws: Path, max_n: int = 20) -> list[dict]:
+    """Inventory per-project meta: version pins + cross-refs, mismatch-aware.
+
+    Each entry: {project, has_mhx, mhx_version, policy_ver, skill_ver,
+    ref_ok, ref_error}. ref_ok is True only when the ref parses AND all
+    three pinned versions equal the running harness (always consider MHX
+    version; mismatch is signal, never silent).
+    """
+    work = ws / WORK_DIR
+    try:
+        names = sorted(p.name for p in work.iterdir()
+                       if p.is_dir() and p.name != ".gitkeep")[:max_n]
+    except Exception:
+        return []
+    out: list[dict] = []
+    for name in names:
+        ref = read_work_ref(ws, name)
+        if ref is None:
+            has = (work_project_mhx_dir(ws, name) / WORK_REF_FILE).exists()
+            out.append({"project": name, "has_mhx": has,
+                        "mhx_version": None, "policy_ver": None,
+                        "skill_ver": None, "ref_ok": False,
+                        "ref_error": "unparseable" if has else "no MHX.ref.json yet (run init --work <name>)"})
+            continue
+        ok = (ref.get("mhx_version") == MHX_VERSION
+              and ref.get("policy_ver") == POLICY_VER
+              and ref.get("skill_ver") == SKILL_VER)
+        err = "" if ok else (
+            f"version mismatch: ref pins mhx_version={ref.get('mhx_version')} "
+            f"policy_ver={ref.get('policy_ver')} skill_ver={ref.get('skill_ver')} "
+            f"vs harness {MHX_VERSION}/{POLICY_VER}/{SKILL_VER}; re-run init --work {name}")
+        out.append({"project": name, "has_mhx": True,
+                    "mhx_version": ref.get("mhx_version"),
+                    "policy_ver": ref.get("policy_ver"),
+                    "skill_ver": ref.get("skill_ver"),
+                    "ref_ok": ok, "ref_error": err})
+    return out
 
 
 def redact(text: str) -> str:

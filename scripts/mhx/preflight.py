@@ -12,7 +12,7 @@ import re
 import shlex
 from pathlib import Path
 
-from .common import POLICY_VER, SKILL_VER, envelope, git_head, is_protected
+from .common import POLICY_VER, SKILL_VER, envelope, git_head, is_protected, is_work_mhx_meta_path, is_work_path
 
 COVERAGE_CARD = (
     "coverage: final-diff + CI scan; non-coverage: make generate / repo scripts / "
@@ -56,6 +56,16 @@ def run(ws: Path, tool: str, path: str = "", cmd: str = "") -> dict:
         if not target:
             return envelope(True, "preflight", ws, would_be="would-defer",
                             clearing_action="re-run with --path or --cmd",
+                            **base)
+        if is_work_mhx_meta_path(target):
+            return envelope(True, "preflight", ws, would_be="would-allow",
+                            clearing_action="mhx-managed meta write: keep mhx_version/policy_ver/skill_ver pinned + cross-ref harness; tracked by user project, never by harness",
+                            note="work/<project>/.mhx/ carve-out: MHX may write meta here only",
+                            **base)
+        if is_work_path(target):
+            return envelope(True, "preflight", ws, would_be="would-allow",
+                            clearing_action="none (work/ is user-project owned; harness CI never gates it)",
+                            note="MHX wraps work/, never tracks it (except work/<project>/.mhx/ meta)",
                             **base)
         if target.startswith("src/") or target.startswith("tests/"):
             return envelope(True, "preflight", ws, would_be="would-allow-with-checks",

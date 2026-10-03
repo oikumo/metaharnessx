@@ -153,6 +153,11 @@ __pycache__/
 .pytest_cache/
 uv.lock
 
+# MHX user-project home (gitignored; harness wraps it, never tracks it)
+# MHX is a mechanical automatic opencode meta harness around work/.
+work/*
+!work/.gitkeep
+
 # Python (stdlib-only project: no build/dist artefacts tracked)
 *.py[cod]
 *$py.class

@@ -1,5 +1,5 @@
 <!-- MHX:BEGIN policy_ver=1 skill_ver=1 do-not-hand-edit-inside -->
-# MHX (managed): run `uv run python scripts/mhx.py preflight …` before editing src//tests//Bash-writes; CI rejects on `mhx check` failure. Skills: mhx-doctor/status/check/resume. Details: SKILL.md.
+# MHX (managed): on any user request run `uv run python scripts/mhx.py auto --phase start --json` first, `auto --phase after --note "… + next" --json` after edits; `preflight` before src//tests//Bash-writes; CI rejects on `check` fail. Skills: mhx-doctor/status/check/resume.
 <!-- MHX:END -->
 
 # AGENTS.md (user-owned below this line — byte-preserved outside MHX block)

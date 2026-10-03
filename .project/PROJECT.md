@@ -17,6 +17,7 @@
 
 ### S1 — Phase 1-micro IS (shippable)
 
+- MHX scope = mechanical automatic opencode meta harness (wrapper). Tracked harness at repo root; user projects live in gitignored `work/` (`work/*` ignored, only `work/.gitkeep` tracked). Harness never tracks, digests, or gates `work/` contents — sole carve-out: MHX may write version-pinned meta under `work/<project>/.mhx/` (tracked by the user project itself, cross-refs harness + `mhx_version`/`policy_ver`/`skill_ver`).
 - `scripts/mhx/` stdlib-only Python verbs: `init/doctor/preflight/status/check/verify/replay/reconcile/session-save/bench-smoke/trace-min/capabilities/writers` + `akb-query/akb-update`
 - `.mhx/` continuity folder (config + knowledge + projects + checkpoints + CURRENT + STATE.md; cache/local ignored)
 - Flat AKB (markdown records + frontmatter `{id,kind,sources,fingerprint,review_state}` + qualified IDs + reverse-ref `needs-review` + bounded query 25)
@@ -37,7 +38,7 @@ Hard `OmtBlock` gates, `tool.execute.before/after` enforcement, npm `mhx-opencod
 1. Fresh minimal implementation, not a port. Cite agentx as design reference with file:line provenance; write correct semantics directly. Never vendor `harnessc.py` (2625 lines) / `gate_driver.ts` (488) / `net/` (21 files) wholesale. No cross-repo gating dependency.
 2. Zero hard-block promises in Phase 1. Skills advise (`would-deny-at-CI`); CI rejects. Ledger = diagnostics. `scope:all`/policy-edit stays `pending` + CI-reject without a second principal.
 3. AKB + checkpoints are core from day one (not `omt` opt-in): qualified IDs, fingerprints + `needs-review`, immutable checkpoint + `CURRENT` + op IDs + per-project lock + conflict-reconcile.
-4. Tracked-vs-ignored is the contract. Loss of `cache/`+`local/` must not erase intent/checkpoint/AKB. Adopt-don't-migrate: map existing paths via `config.json`; link, don't copy.
+4. Tracked-vs-ignored is the contract. Loss of `cache/`+`local/` must not erase intent/checkpoint/AKB. `work/` is the gitignored user-project home (harness wraps it, never owns it) — except MHX-writable `work/<project>/.mhx/` meta, which the user project tracks in its own VCS and which always pins + cross-refs the harness MHX version. Adopt-don't-migrate: map existing paths via `config.json`; link, don't copy.
 5. Agent-buildability lock: every task is an agent packet (≤400 lines new code, explicit touches/forbidden, fixture DoD, rollback, checkpoint). Any task needing human judgment, multi-repo coordination, or live multi-host testing is out of Phase 1.
 6. Honesty norm: no promotion without smoke win + `remove-when` sunset per check. `TP=13/FP=0` stays regression signal, never marketing. Corrected medians **365,145.5 vs 832,593** (n=6 captures, `io_bytes//4` proxy) frozen.
 
@@ -107,7 +108,7 @@ Parked (not tasks until M3 GO): `mhx-omt` pack; Phase 2 hard gates + `mhx-openco
 ## 5. Target repo layout (create in this order)
 
 ```text
-metaharnessx/
+metaharnessx/                       # MHX harness (tracked wrapper)
 ├── .project/PROJECT.md              # THIS FILE (authority)
 ├── scripts/mhx/*.py                 # stdlib-only verbs
 ├── skills/mhx-*/SKILL.md            # 4 advise-only skills (source; installer copies to .agents/skills/)
@@ -120,7 +121,8 @@ metaharnessx/
 ├── .mhx/{config.json,knowledge/,projects/mhx-v1/}  # dogfood continuity here
 ├── AGENTS.md                        # 15-line MHX managed section (rest byte-preserved)
 ├── README.md + pyproject.toml       # product packaging
-└── .github/workflows/mhx-check.yml  # CI reruns checks + digest compare
+├── .github/workflows/mhx-check.yml  # CI reruns checks + digest compare
+└── work/                            # gitignored user-project home (only .gitkeep tracked; harness wraps, never owns; carve-out: work/<project>/.mhx/MHX.ref.json version-pinned meta, tracked by the user project)
 ```
 
 ## 6. References (provenance, not authority)

@@ -16,8 +16,8 @@ Run:
 uv run python scripts/mhx.py doctor --json
 ```
 
-Read `checks[]`: `python3`, `git-root`, `mhx-config`, `agents-managed-section`,
-`skill-location`. `opencode-version` is informational, never gating.
+Read `checks[]`: `python3`, `git-root`, `mhx-config`, `work-dir`, `work-ignored`,
+`work-meta`, `agents-managed-section`, `skill-location`. `opencode-version` is informational, never gating.
 
 ## Step 2 — capabilities
 
@@ -34,6 +34,9 @@ recorded in evidence). No silent downgrade.
 - Install: `uv run python scripts/mhx.py init --json` scaffolds `.mhx/MHX.yaml`,
   `checks.yaml`, managed `AGENTS.md` block, one skill location. Never clobbers
   non-empty without `--force` (backs up to `.mhx/local/backup/`).
+- Per user project: `uv run python scripts/mhx.py init --work <name> --json`
+  scaffolds version-pinned `work/<name>/.mhx/MHX.ref.json` (tracked by that
+  project, cross-refs harness + MHX version; `work-meta` check flags drift).
 - One canonical skill location per host (`.agents/skills/` default).
   `--host all` only with `--allow-duplication --reason` (CI warns).
 - Upgrade rewrites only allowlisted skill paths + managed block; bump

@@ -66,6 +66,10 @@ def run(ws: Path) -> dict:
             capture_output=True, text=True, timeout=15,
         )
         changed = [l[3:] for l in (st.stdout.splitlines() if st.returncode == 0 else [])]
+        # Wrapper scope: work/ is gitignored user-project home; never drive
+        # harness checks even if ignore rules slip (incl. work/<proj>/.mhx/
+        # meta, which the user project tracks and versions itself).
+        changed = [c for c in changed if not (c == "work" or c.startswith("work/"))]
     except Exception:
         changed = []
     entries = _load_checks(ws)

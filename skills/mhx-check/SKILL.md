@@ -6,7 +6,7 @@ allowed-tools: "Bash(uv run python scripts/mhx.py *) Read"
 
 # mhx-check — run checks + bind evidence (advise; CI rejects)
 
-You run the repo's own checks and bind evidence. You advise (`would-deny-at-CI`); CI rejects.
+You run the repo's own checks and bind evidence. You advise (`would-deny-at-CI`); CI rejects. Wrapper scope: harness checks cover the wrapper only; `work/` user projects are never gated here.
 
 You run the repo's own checks and bind evidence. CI re-executes what it relies on.
 

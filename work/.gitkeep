@@ -1,0 +1,3 @@
+# work/ is the gitignored user-project home. MHX (this repo) is a mechanical
+# automatic opencode meta harness that wraps it — never track user work here.
+# This .gitkeep is the only tracked file under work/ (see .gitignore work/*).

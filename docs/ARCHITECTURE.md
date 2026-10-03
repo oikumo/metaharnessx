@@ -1,6 +1,7 @@
 # MHX Architecture — Phase 1-micro (continuity + evidence kit)
 
 > Factory + first consumer: this repo. Opencode only. 4 advise-only skills. Zero TS/plugin. Stdlib Python. CI-is-authority.
+> Scope: MHX is a mechanical automatic opencode meta harness (wrapper) around gitignored `work/`. Harness digests/evidence/checks cover the wrapper only; `work/` contents are never tracked, digested, or gated — except version-pinned meta MHX may write under `work/<project>/.mhx/` (`MHX.ref.json` pins `mhx_version`/`policy_ver`/`skill_ver`, cross-refs harness `.mhx/`, tracked by the user project in its own VCS).
 
 ## Deep-analysis synthesis (verified snapshot)
 

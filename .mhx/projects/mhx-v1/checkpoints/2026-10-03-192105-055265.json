@@ -1,0 +1,17 @@
+{
+  "checkpoint_id": "2026-10-03-192105-055265.json",
+  "created_at": "2026-10-03T19:21:05Z",
+  "evidence": {
+    "classification": "see verify"
+  },
+  "next_action": "work-project .mhx/ meta carve-out done: init --work scaffolds version-pinned MHX.ref.json, preflight/doctor/status cross-ref versions + next: user review",
+  "note": "work-project .mhx/ meta carve-out done: init --work scaffolds version-pinned MHX.ref.json, preflight/doctor/status cross-ref versions + next: user review",
+  "op_id": "op-1791055265",
+  "parent_id": "2026-10-03-191016-to-002.json",
+  "project_id": "mhx-v1",
+  "schema_ver": 1,
+  "workspace": {
+    "revision": "062a991c2e8ff0885de18fd8dc196bee67167712",
+    "tree": "sha256:f6485facd910bf7a8e2ad2dc8b88a82bc6ae31dd6c842679efb4a509cf2e80be"
+  }
+}

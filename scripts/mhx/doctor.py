@@ -15,6 +15,7 @@ from .common import (
     envelope,
     git_head,
     resolve_workspace,
+    work_meta_inventory,
 )
 
 
@@ -26,6 +27,28 @@ def _version(cmd: list[str]) -> str:
         return "absent"
     except Exception:
         return "absent"
+
+
+def _is_ignored(ws: Path, rel: str) -> bool:
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(ws), "check-ignore", "-q", rel],
+            capture_output=True, text=True, timeout=10,
+        )
+        return out.returncode == 0
+    except Exception:
+        # Fallback: read .gitignore directly (no git available).
+        try:
+            gi = (ws / ".gitignore").read_text(encoding="utf-8")
+            return any(s.strip() in ("work/*", "work/") for s in gi.splitlines())
+        except Exception:
+            return False
+
+
+def _work_ignored(ws: Path) -> bool:
+    # work/* ignores user-project contents; only work/.gitkeep is tracked.
+    # Probe a representative user path (not the dir itself, not .gitkeep).
+    return _is_ignored(ws, "work/_mhx_probe_") and not _is_ignored(ws, "work/.gitkeep")
 
 
 def run(ws: Path, verbose: bool = False) -> dict:
@@ -52,6 +75,27 @@ def run(ws: Path, verbose: bool = False) -> dict:
         "id": "mhx-config",
         "ok": mhx_yaml.exists(),
         "detail": str(mhx_yaml) if mhx_yaml.exists() else "missing: run init",
+    })
+    work = ws / "work"
+    checks.append({
+        "id": "work-dir",
+        "ok": work.exists() and work.is_dir(),
+        "detail": str(work) if work.exists() else "missing: run init (creates gitignored work/ user-project home)",
+    })
+    checks.append({
+        "id": "work-ignored",
+        "ok": _work_ignored(ws),
+        "detail": "work/* gitignored, work/.gitkeep tracked (harness wraps, never tracks user work)" if _work_ignored(ws) else "work/ scope broken: .gitignore must contain work/* + !work/.gitkeep",
+    })
+    meta = work_meta_inventory(ws)
+    mismatched = [m["project"] for m in meta if m["has_mhx"] and not m["ref_ok"]]
+    checks.append({
+        "id": "work-meta",
+        "ok": not mismatched,
+        "detail": (f"{len(meta)} work project(s), all MHX.ref.json version-pinned ({MHX_VERSION}/{POLICY_VER}/{SKILL_VER})" if meta and not mismatched
+                   else f"version mismatch in: {mismatched} (re-run init --work <name>)" if mismatched
+                   else "no work projects yet (init --work <name> scaffolds work/<name>/.mhx/MHX.ref.json)"),
+        "note": "work/<project>/.mhx/ is the sole MHX-writable carve-out; tracked by the user project, cross-refs harness + MHX version",
     })
     agents = ws / "AGENTS.md"
     if agents.exists():

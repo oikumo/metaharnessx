@@ -2,7 +2,7 @@
 """MHX dispatcher: python3 scripts/mhx.py <verb> --workspace <root> --json.
 
 Verbs: init|doctor|preflight|status|check|verify|replay|reconcile|session-save|
-bench-smoke|capabilities|writers|akb-query|akb-update|trace-min
+auto|bench-smoke|capabilities|writers|akb-query|akb-update|trace-min
 Workspace via --workspace / MHX_WORKSPACE -> git rev-parse --show-toplevel -> CWD.
 Never skill-dir inference. Stdlib-only (new third-party import = build error).
 """
@@ -60,6 +60,10 @@ def main(argv: list[str]) -> int:
     if verb in ("reconcile", "session-save"):
         from mhx.reconcile import main as m
         return m([verb] + rest, workspace, as_json)
+    if verb in ("auto", "auto-start", "auto-after"):
+        from mhx.auto_cmd import main as m
+        prefix = {"auto-start": ["start"], "auto-after": ["after"]}.get(verb, [])
+        return m(prefix + rest, workspace, as_json)
     if verb in ("akb-query", "akb-update"):
         from mhx.akb import main as m
         return m([verb] + rest, workspace, as_json)

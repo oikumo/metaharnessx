@@ -1,0 +1,17 @@
+{
+  "checkpoint_id": "2026-10-03-190814-to-001.json",
+  "created_at": "2026-10-03T19:08:14Z",
+  "evidence": {
+    "classification": "see verify"
+  },
+  "next_action": "auto chain landed; next wire skills to call auto",
+  "note": "auto chain landed; next wire skills to call auto",
+  "op_id": "auto-001",
+  "parent_id": "2026-10-03-184904-m1-001.json",
+  "project_id": "mhx-v1",
+  "schema_ver": 1,
+  "workspace": {
+    "revision": "062a991c2e8ff0885de18fd8dc196bee67167712",
+    "tree": "sha256:99af7b104d1bd6e6439a4135f30551dc624db122529428f7d77624575b9d19ab"
+  }
+}

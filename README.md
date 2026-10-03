@@ -1,6 +1,7 @@
 # MetaHarnessX (MHX) — Continuity + Evidence Kit (Phase 1-micro)
 
 > Status: active (v7 GO) · License: Apache-2.0 · Hosts: opencode (Phase 1) · Non-relation: unrelated to the "Meta-Harness" optimization-loop paper.
+> Scope: MHX is a mechanical automatic opencode meta harness (wrapper). Tracked harness lives here; user projects live in gitignored `work/` (only `work/.gitkeep` tracked).
 
 **Promise:** on opencode, given a change, show the constraints that apply, run the relevant existing checks, and produce CI-trusted evidence — with durable project memory (intent + checkpoint + AKB) that a fresh session can resume without prior chat.
 
@@ -14,12 +15,14 @@ uv run python scripts/mhx.py preflight --tool edit --path src/example.py --json
 uv run python scripts/mhx.py status --json
 uv run python scripts/mhx.py check --json         # writes .mhx/evidence.json
 uv run python scripts/mhx.py verify --json        # usable/stale/missing
+uv run python scripts/mhx.py init --work myproj --json  # per-project meta work/myproj/.mhx/MHX.ref.json (version-pinned, tracked by that project)
 uv run python scripts/mhx.py session-save --project mhx-v1 --note "…" --op op-001 --json
 uv run python scripts/mhx.py akb-query --q "checkpoint" --json
 ```
 
 ## Layout
 
+- `work/` — gitignored user-project home (harness wraps it, never tracks/gates it; carve-out: MHX may write version-pinned meta under `work/<project>/.mhx/`, tracked by the user project itself).
 - `scripts/mhx/` — stdlib-only verbs (`init/doctor/preflight/status/check/verify/replay/reconcile/session-save/bench-smoke/capabilities/writers/akb-*`).
 - `skills/mhx-*/SKILL.md` — 4 advise-only skills (source; installer copies to exactly one `.agents/skills/` location; dogfooded here).
 - `templates/` — `MHX.yaml` + `checks.yaml` + project/state starters.

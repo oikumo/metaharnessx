@@ -1,5 +1,5 @@
 # STATE — mhx-v1 (generated from CURRENT, never hand-edit; regen only)
 
-- CURRENT: `2026-10-03-184904-m1-001.json`.
-- Next: M0-M1 kit landed; 15 tests green; verify pass
-- Head: 27b4dd534a2d7c79b3d0e28ffc2b39dedb45cc26.
+- CURRENT: `2026-10-03-192105-055265.json`.
+- Next: work-project .mhx/ meta carve-out done: init --work scaffolds version-pinned MHX.ref.json, preflight/doctor/status cross-ref versions + next: user review
+- Head: 062a991c2e8ff0885de18fd8dc196bee67167712.
