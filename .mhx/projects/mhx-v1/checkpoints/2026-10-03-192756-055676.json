@@ -1,0 +1,34 @@
+{
+  "artifacts": [
+    ".project/PROJECT.md",
+    ".mhx/config.json",
+    ".mhx/knowledge/MAP.md"
+  ],
+  "checkpoint_id": "2026-10-03-192756-055676.json",
+  "created_at": "2026-10-03T19:27:56Z",
+  "evidence": {
+    "classification": "see verify"
+  },
+  "intent_ref": {
+    ".project/PROJECT.md": "active v7 GO",
+    "decisions": "D0-D7 locked"
+  },
+  "next_action": "review fixes landed: checks.yaml 3 entries with remove-when + full-suite backstop, PROJECT.md M0/M1.1/M1.2/M1.5/M2.2 synced, checkpoints enriched + next: user review-commit-push",
+  "note": "review fixes landed: checks.yaml 3 entries with remove-when + full-suite backstop, PROJECT.md M0/M1.1/M1.2/M1.5/M2.2 synced, checkpoints enriched + next: user review-commit-push",
+  "op_id": "op-1791055676",
+  "parent_id": "2026-10-03-192105-055265.json",
+  "progress": {
+    "blockers": [],
+    "completed": [
+      "review fixes landed: checks.yaml 3 entries with remove-when + full-suite backstop, PROJECT.md M0/M1.1/M1.2/M1.5/M2.2 synced, checkpoints enriched + next: user review-commit-push"
+    ],
+    "partial": []
+  },
+  "project_id": "mhx-v1",
+  "recovery_boundary": "same-dir",
+  "schema_ver": 1,
+  "workspace": {
+    "revision": "dda1689d3067069532bb5c71b975c3cb6e8a1e35",
+    "tree": "sha256:c9fbcac014236f5af4f0453f54c9a6ce4b5e62dd5c859992b3826c4d4274ee60"
+  }
+}

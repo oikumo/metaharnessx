@@ -1,5 +1,15 @@
 # checks.yaml — ecosystem commands behind a stable interface.
 # Each entry: id | cmd | applies_to (glob prefix). Runner executes cmd as-is.
+# Every check carries `remove-when` (sunset hygiene, S5); `tune` proposes PRs a human approves.
 - id: pytest-feature
   cmd: uv run pytest tests/ -q
   applies_to: tests/
+  remove-when: tests/ suite replaced or split per-stack (mvc_py/mvc_ts); sunset only via human-approved PR
+- id: pytest-pins
+  cmd: uv run pytest tests/test_stdlib_only.py tests/test_skill_shape.py tests/test_preflight.py -q
+  applies_to: skills/
+  remove-when: skill-shape/preflight pins subsumed by a faster static gate with equal signal
+- id: pytest-harness
+  cmd: uv run pytest tests/test_doctor_init.py tests/test_evidence_checkpoint_akb.py tests/test_work_scope.py -q
+  applies_to: scripts/
+  remove-when: harness verbs covered by per-verb contract tests with equal signal

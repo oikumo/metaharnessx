@@ -43,6 +43,8 @@ def _load_checks(ws: Path) -> list[dict]:
             cur["cmd"] = s.split(":", 1)[1].strip()
         elif s.startswith("applies_to:") and cur is not None:
             cur["applies_to"] = s.split(":", 1)[1].strip()
+        elif s.startswith("remove-when:") and cur is not None:
+            cur["remove-when"] = s.split(":", 1)[1].strip()
     if cur:
         entries.append(cur)
     return entries
@@ -56,6 +58,11 @@ def _relevant(entries: list[dict], changed: list[str]) -> list[dict]:
         prefix = (e.get("applies_to") or "").rstrip("/")
         if not prefix or any(c.startswith(prefix) for c in changed):
             out.append(e)
+    # Full-suite backstop: entries[0] (pytest-feature, all of tests/) always
+    # runs on any wrapper diff so docs/config-only changes still bind evidence.
+    # Targeted pins (skills/, scripts/) add on top; deduped, order-preserved.
+    if entries and entries[0] not in out:
+        out = [entries[0]] + out
     return out or entries[:1]
 
 
@@ -99,6 +106,7 @@ def run(ws: Path) -> dict:
             "exit": exit_code, "log_digest": sha256_str(log),
             "log_excerpt": redact(log[-800:]),
             "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(started)),
+            "remove-when": e.get("remove-when", ""),
         })
     mhx_yaml = ws / ".mhx" / "MHX.yaml"
     cfg_digest = sha256_str(mhx_yaml.read_text(encoding="utf-8")) if mhx_yaml.exists() else "missing"

@@ -51,6 +51,12 @@ def session_save(ws: Path, project: str, note: str, op_id: str = "") -> dict:
         "workspace": {"revision": git_head(ws), "tree": tree_digest(ws)},
         "evidence": {"classification": "see verify"},
         "next_action": note,
+        "intent_ref": {".project/PROJECT.md": "active v7 GO",
+                       "decisions": "D0-D7 locked"},
+        "progress": {"completed": [note], "partial": [], "blockers": []},
+        "artifacts": [".project/PROJECT.md", ".mhx/config.json",
+                      ".mhx/knowledge/MAP.md"],
+        "recovery_boundary": "same-dir",
     }
     # Lock + expected-parent compare (no silent overwrite).
     lock = pdir / ".lock"
